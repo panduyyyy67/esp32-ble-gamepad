@@ -13,8 +13,18 @@ Fitur utama:
 
 | File | Keterangan |
 |------|------------|
-| `esp32_ble_gamepad.ino` | Sketch utama |
-| `hid_pad.h` / `hid_pad.cpp` | Wrapper ESP32-BLE-Gamepad (dipisah agar tidak conflict dengan BleCombo/Bluedroid) |
+| `esp32_ble_gamepad_id.ino` | Sketch utama — **Bahasa Indonesia** (pesan OLED & komentar) |
+| `esp32_ble_gamepad_en.ino` | Sketch utama — **English** (same code, English UI messages) |
+| `hid_pad.h` / `hid_pad.cpp` | Wrapper ESP32-BLE-Gamepad (shared, works with both sketches) |
+
+### Cara pakai (Arduino IDE)
+
+1. Buat folder sketch, misalnya `esp32_ble_gamepad`.
+2. Copy **salah satu** file `.ino` ke dalam folder itu, lalu **rename** file `.ino` agar namanya sama dengan nama folder (`esp32_ble_gamepad.ino`).
+3. Copy juga `hid_pad.h` dan `hid_pad.cpp` ke folder yang sama.
+4. Buka folder sebagai sketch, pilih partition **Huge APP**, lalu upload.
+
+Atau gunakan PlatformIO / folder terpisah untuk versi ID dan EN.
 
 ## Library yang dibutuhkan
 
@@ -42,8 +52,6 @@ Referensi perbaikan umum yang sering dibutuhkan (reconnect Windows, VID/PID, dll
 
 Wrapper `hid_pad.cpp` sudah memakai `setAutoReport(false)` + `sendReport()` manual, dan hanya include BleGamepad di file terpisah agar tidak bentrok dengan BleCombo.
 
-> Link share Claude agent yang disebutkan user (`https://claude.ai/share/52bcc740-f05a-46ef-87d0-75b22784545c`) tidak bisa diakses dari sisi agent (Cloudflare challenge). Jika ada patch spesifik dari percakapan tersebut, silakan kirim ulang isinya agar bisa digabungkan.
-
 ## Wiring
 
 ```
@@ -59,8 +67,8 @@ Joystick (analog):
 Push button (active LOW ke GND):
   Button 1 → GPIO25
   Button 2 → GPIO26
-  Button 3 → GPIO27   (menu: ULANG)
-  Button 4 → GPIO33   (menu: KELUAR)
+  Button 3 → GPIO27   (menu: ULANG / REDO)
+  Button 4 → GPIO33   (menu: KELUAR / EXIT)
 
 OLED SSD1306 128x32 (I2C):
   SDA → GPIO21
@@ -126,8 +134,8 @@ flowchart LR
   subgraph Buttons
     B1[Btn1]
     B2[Btn2]
-    B3[Btn3 ULANG]
-    B4[Btn4 KELUAR]
+    B3[Btn3 REDO]
+    B4[Btn4 EXIT]
   end
 
   subgraph OLED
@@ -172,19 +180,19 @@ flowchart LR
 Navigasi menu:
 - Joystick atas/bawah = pilih
 - Klik joystick = OK
-- GPIO33 = keluar
+- GPIO33 = keluar / exit
 
 Menu yang tersedia:
-- **Mapping tombol** → tekan pushbutton / remote IR → pilih key di layout → tersimpan
+- **Mapping tombol / Button mapping** → tekan pushbutton / remote IR → pilih key di layout → tersimpan
 - **Mode** → ganti KEYBOARD ↔ GAMEPAD (restart otomatis setelah keluar menu)
 - **Reset mapping** → kembalikan mapping mode yang aktif ke default
-- **Keluar**
+- **Keluar / Exit**
 
 ## Build & Upload
 
 1. Install library di atas via Library Manager / PlatformIO.
 2. Pilih board ESP32 + partition **Huge APP**.
-3. Upload sketch.
+3. Upload sketch (gunakan versi `_id` atau `_en` sesuai bahasa yang diinginkan).
 4. Pair device di PC / Android / iOS sebagai keyboard atau gamepad sesuai mode yang aktif.
 
 ## Lisensi
